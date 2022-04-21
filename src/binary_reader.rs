@@ -99,6 +99,7 @@ impl BinaryReader {
 impl BinaryReader {
     pub fn read(&mut self, pos: usize, size: usize) -> Vec<u8> {
         let mut result = Vec::new();
+        println!("{:?} + {:?}", pos, size);
         for i in 0..size {
             result.push(self.data[pos + i]);
         }

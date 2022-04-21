@@ -55,7 +55,8 @@ impl SectionHeader {
 
         if (ret.sh_flags & 1 << 27) != 0 {
             // zlib deflate
-            let mut decoder = ZlibDecoder::new(&ret.data[..]);
+            println!("{:?}", ret.data);
+            let mut decoder = ZlibDecoder::new(&ret.data[4..]);
             let mut buf = vec![];
             decoder.read_to_end(&mut buf).unwrap();
             ret.data = buf;
@@ -113,5 +114,20 @@ mod tests {
         assert_eq!(header.sh_ent_size, 0x99999999, "[sh_ent_size]");
 
         assert_eq!(header.data, data.clone(), "[data]");
+    }
+
+    #[test]
+    fn test_zlib() {
+        let mut data = vec![
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x24, 0x00, 0x00, 0x00, 0x0e, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x78, 0x9c,
+            0xcb, 0xc8, 0x04, 0x00, 0x01, 0x3b, 0x00, 0xd2,
+        ];
+
+        let mut reader = BinaryReader::new(data.clone());
+
+        let header = super::SectionHeader::parse(&mut reader);
+        assert_eq!(header.data, vec![0x68, 0x69], "[data]");
     }
 }
