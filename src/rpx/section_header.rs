@@ -1,6 +1,6 @@
 use super::super::binary_reader::BinaryReader;
 use flate2::read::ZlibDecoder;
-use std::io::{Read, Seek, SeekFrom};
+use std::io::Read;
 
 pub struct SectionHeader {
     sh_name: u64,

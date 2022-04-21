@@ -104,6 +104,14 @@ impl BinaryReader {
         }
         result
     }
+
+    pub fn read_n_bytes(&mut self, size: usize) -> Vec<u8> {
+        let mut result = Vec::new();
+        for i in 0..size {
+            result.push(self.read_u8());
+        }
+        result
+    }
 }
 
 #[cfg(test)]
