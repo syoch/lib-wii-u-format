@@ -95,3 +95,111 @@ impl BinaryReader {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_big_endian_read() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        reader.endian = super::Endian::Big;
+        assert_eq!(reader.read_u64(), 0x0102030405060708);
+    }
+
+    #[test]
+    fn test_little_endian_read() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        reader.endian = super::Endian::Little;
+        assert_eq!(reader.read_u64(), 0x0807060504030201);
+    }
+
+    #[test]
+    fn test_u128() {
+        let data = vec![
+            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
+            0x0f, 0x10,
+        ];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read_u128(), 0x0001020304050607080a0b0c0d0e0f10);
+    }
+
+    #[test]
+    fn test_u64() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read_u64(), 0x0102030405060708);
+    }
+
+    #[test]
+    fn test_u32() {
+        let data = vec![0x01, 0x02, 0x03, 0x04];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read_u32(), 0x01020304);
+    }
+
+    #[test]
+    fn test_u16() {
+        let data = vec![0x01, 0x02];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read_u16(), 0x0102);
+    }
+
+    #[test]
+    fn test_u8() {
+        let data = vec![0x01];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read_u8(), 0x01);
+    }
+
+    #[test]
+    fn test_half_64bit() {
+        let data = vec![0x01, 0x02, 0x03, 0x04];
+        let mut reader = super::BinaryReader::new(data);
+        reader.is_64bit = true;
+        assert_eq!(reader.read_half(), 0x01020304);
+    }
+
+    #[test]
+    fn test_half_32bit() {
+        let data = vec![0x01, 0x02];
+        let mut reader = super::BinaryReader::new(data);
+        reader.is_64bit = false;
+        assert_eq!(reader.read_half(), 0x0102);
+    }
+
+    #[test]
+    fn test_word_64bit() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        reader.is_64bit = true;
+        assert_eq!(reader.read_word(), 0x0102030405060708);
+    }
+
+    #[test]
+    fn test_word_32bit() {
+        let data = vec![0x01, 0x02, 0x03, 0x04];
+        let mut reader = super::BinaryReader::new(data);
+        reader.is_64bit = false;
+        assert_eq!(reader.read_word(), 0x01020304);
+    }
+
+    #[test]
+    fn test_dword_64bit() {
+        let data = vec![
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e,
+            0x0f, 0x10,
+        ];
+        let mut reader = super::BinaryReader::new(data);
+        reader.is_64bit = true;
+        assert_eq!(reader.read_dword(), 0x0102030405060708090a0b0c0d0e0f10);
+    }
+
+    #[test]
+    fn test_dword_32bit() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        reader.is_64bit = false;
+        assert_eq!(reader.read_dword(), 0x0102030405060708);
+    }
+}
