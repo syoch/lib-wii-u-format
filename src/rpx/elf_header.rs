@@ -38,23 +38,23 @@ impl ELFHeader {
     }
 
     pub fn parse(reader: &mut BinaryReader) -> ELFHeader {
-        let ret = ELFHeader::default();
+        let mut ret = ELFHeader::default();
 
         ret.e_ident = ELFIdentifier::parse(reader);
 
-        ret.e_type = reader.read_u32();
-        ret.e_machine = reader.read_u32();
-        ret.e_version = reader.read_u64();
-        ret.e_entry = reader.read_u64();
-        ret.e_phoff = reader.read_u64();
-        ret.e_shoff = reader.read_u64();
-        ret.e_flags = reader.read_u64();
-        ret.e_ehsize = reader.read_u32();
-        ret.e_phentsize = reader.read_u32();
-        ret.e_phnum = reader.read_u32();
-        ret.e_shentsize = reader.read_u32();
-        ret.e_shnum = reader.read_u32();
-        ret.e_shstrndx = reader.read_u32();
+        ret.e_type = reader.read_half();
+        ret.e_machine = reader.read_half();
+        ret.e_version = reader.read_word();
+        ret.e_entry = reader.read_word();
+        ret.e_phoff = reader.read_word();
+        ret.e_shoff = reader.read_word();
+        ret.e_flags = reader.read_word();
+        ret.e_ehsize = reader.read_half();
+        ret.e_phentsize = reader.read_half();
+        ret.e_phnum = reader.read_half();
+        ret.e_shentsize = reader.read_half();
+        ret.e_shnum = reader.read_half();
+        ret.e_shstrndx = reader.read_half();
 
         return ret;
     }
@@ -75,7 +75,7 @@ mod tests {
             0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x00, 0x12, 0x00, 0x0f, 0x00, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00,
         ];
-        let reader = BinaryReader::new(data);
+        let mut reader = BinaryReader::new(data);
         let elf_header = ELFHeader::parse(&mut reader);
 
         assert_eq!(elf_header.e_type, 0xfe01);
