@@ -1,3 +1,5 @@
+use super::utils::concat_number;
+
 #[derive(PartialEq, Debug, Clone)]
 pub enum Endian {
     Big,
@@ -22,18 +24,16 @@ impl BinaryReader {
         }
     }
 
-    fn _concat<T>(&self, high: T, low: T, shift: u8) -> u128
+    pub fn _concat<T>(&self, high: T, low: T, shift: u8) -> u128
     where
         T: num::ToPrimitive,
         T: std::ops::Shr<usize, Output = T>,
+        T: num::Unsigned,
     {
-        let high = high.to_u128().unwrap();
-        let low = low.to_u128().unwrap();
-
         if self.endian == Endian::Big {
-            (high << shift) | low
+            concat_number(high, low, shift)
         } else {
-            (low << shift) | high
+            concat_number(low, high, shift)
         }
     }
 }
