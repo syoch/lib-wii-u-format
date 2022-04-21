@@ -1,4 +1,6 @@
 use super::super::binary_reader::BinaryReader;
+use flate2::read::ZlibDecoder;
+use std::io::{Read, Seek, SeekFrom};
 
 pub struct SectionHeader {
     sh_name: u64,
@@ -12,6 +14,7 @@ pub struct SectionHeader {
     sh_addr_align: u64,
     sh_ent_size: u64,
 
+    remained_flags: u64,
     data: Vec<u8>,
 }
 
@@ -42,11 +45,20 @@ impl SectionHeader {
             sh_addr_align,
             sh_ent_size,
 
+            remained_flags: sh_flags,
             data: vec![],
         };
 
         if let Some(reader) = reader {
             ret.data = reader.read(ret.sh_offset as usize, ret.sh_size as usize);
+        }
+
+        if (ret.sh_flags & 1 << 27) != 0 {
+            // zlib deflate
+            let mut decoder = ZlibDecoder::new(&ret.data[..]);
+            let mut buf = vec![];
+            decoder.read_to_end(&mut buf).unwrap();
+            ret.data = buf;
         }
 
         return ret;
