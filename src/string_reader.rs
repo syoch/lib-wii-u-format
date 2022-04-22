@@ -13,6 +13,10 @@ impl StringReader {
 }
 
 impl StringReader {
+    pub fn has_data(&self) -> bool {
+        self.offset < self.data.len()
+    }
+
     pub fn read_char_abs(&mut self, pos: usize) -> Result<u8, String> {
         if pos >= self.data.len() {
             return Err("EOF".to_string());
@@ -138,5 +142,17 @@ mod tests {
 
         assert_eq!(reader.find("cd").unwrap(), 2);
         assert_eq!(reader.find("1234").unwrap(), 4);
+    }
+
+    #[test]
+    fn test_has_data() {
+        let data = "abcd1234".as_bytes().to_vec();
+        let mut reader = super::StringReader::new(data);
+
+        assert!(reader.has_data());
+        reader.consume(4);
+        assert!(reader.has_data());
+        reader.consume(4);
+        assert!(!reader.has_data());
     }
 }
