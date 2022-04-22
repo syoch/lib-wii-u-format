@@ -58,14 +58,24 @@ impl StringReader {
 
     pub fn except<T>(&mut self, s: T) -> Result<(), String>
     where
-        T: Into<Vec<u8>>,
+        T: ToString,
     {
-        let s = s.into();
+        let s = s.to_string().as_bytes().to_vec();
         if self.if_startswith(&s)? {
             Ok(())
         } else {
             Err(format!("except: {:?}", s))
         }
+    }
+
+    pub fn find<T>(&mut self, s: T) -> Result<usize, String>
+    where
+        T: ToString,
+    {
+        let str = String::from_utf8(self.data[self.offset..].to_vec()).unwrap();
+        let pos = str.find(&s.to_string()).unwrap();
+
+        Ok(pos)
     }
 }
 
@@ -116,8 +126,17 @@ mod tests {
         let data = "abcd1234".as_bytes().to_vec();
         let mut reader = super::StringReader::new(data);
 
-        assert!(reader.except(b"abcd".to_vec()).is_ok());
-        assert!(reader.except(b"1235".to_vec()).is_err());
+        assert!(reader.except("abcd").is_ok());
+        assert!(reader.except("1235").is_err());
         assert_eq!(reader.read_n_bytes(4).unwrap(), b"1234");
+    }
+
+    #[test]
+    fn test_find() {
+        let data = "abcd1234".as_bytes().to_vec();
+        let mut reader = super::StringReader::new(data);
+
+        assert_eq!(reader.find("cd").unwrap(), 2);
+        assert_eq!(reader.find("1234").unwrap(), 4);
     }
 }
