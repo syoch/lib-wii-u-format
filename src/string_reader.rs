@@ -40,7 +40,7 @@ impl StringReader {
     }
 
     pub fn read_n_bytes(&mut self, size: usize) -> Result<Vec<u8>, String> {
-        let mut result = self.read(self.offset, size)?;
+        let result = self.read(self.offset, size)?;
         self.offset += size;
         Ok(result)
     }
@@ -74,12 +74,16 @@ impl StringReader {
 
     pub fn find<T>(&mut self, s: T) -> Result<usize, String>
     where
-        T: ToString,
+        T: ToString + std::fmt::Debug,
     {
         let str = String::from_utf8(self.data[self.offset..].to_vec()).unwrap();
-        let pos = str.find(&s.to_string()).unwrap();
+        let pos = str.find(&s.to_string());
 
-        Ok(pos)
+        if let Some(pos) = pos {
+            Ok(pos)
+        } else {
+            Err(format!("find: {:?}", s))
+        }
     }
 }
 

@@ -12,7 +12,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let functions = String::from_utf8(funcitons)?;
 
     for line in functions.lines() {
-        println!("{:?}", ghs_demangle::demangle(line));
+        println!("{:?}", ghs_demangle::demangle(line)?);
     }
 
     Ok(())
