@@ -1,0 +1,27 @@
+use_facet__tm__24_Q2_3std14ctype__tm__2_w__3stdFRCQ2_3std6locale_RCZ1Z
+use_facet__tm__24_ Q2_3std14ctype__tm__2_w__3stdFRCQ2_3std6locale_RCZ1Z
+         ^^^^^^~~^ ^~^           ^^^^^^~^ ^^    ^  ^ ^           ^   ~
+                                                 +--------------+ +---+
++----------------------------------------+        +-------------+  +--+
+                          +--------------+         +------------+
+|-------|             |--||-----|        |  |--|      |--||-----|   |-|
+
+
+
++---+: Element
+^: Constant(?)
+~: argument
+
+use_facet
+  __tm __ 24_
+    Q2_
+      3std
+      14ctype
+        __tm __ 2_
+          w
+  __3std
+  F
+    R C Q2_
+      3std
+      6locale
+  _ R C Z1Z
