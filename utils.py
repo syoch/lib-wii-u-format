@@ -9,3 +9,17 @@ def rev_32(x):
 
 assert rev_32(0x12345678) == 0x78563412, hex(rev_32(0x12345678))
 assert rev_32(0x78563412) == 0x12345678, hex(rev_32(0x89563412))
+
+def overlayed(aa, ab, ba, bb):
+        # aa ab ba bb
+    if ab < ba:
+        return None
+
+        # ba bb aa ab
+    if bb > aa:
+        return None
+
+    return [
+        min(aa, ba),
+        max(ab, bb)
+    ]
