@@ -2,10 +2,8 @@ import sys
 import os
 import pathlib
 
-sys.path.append(os.getcwd()+"/..")
-
-from wiiu.range_manager import RangeManager
-from wiiu.binary import StreamReader
+from .range_manager import RangeManager
+from .binary import StreamReader
 
 with open("/shared/Resources/WiiUBinarys/MediaWiiU0.arc", "rb") as fp:
     data = fp.read()
