@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Callable, List, Optional
 import string
 import logging
-
+import sys
 logging.basicConfig(
     level=logging.INFO,
     format="%(levelname)7s %(name)20s: %(funcName)30s: %(message)s"
@@ -661,8 +661,24 @@ def main():
             fp.write(line + "\n")
 
 
-if __name__ == "__main__":
+def run(remove_ret_type=False, remove_argv=False):
     demangler = Demangler()
     logger.setLevel(logging.INFO)
     while True:
-        print(demangler.demangle(input("input: ")))
+        ret = demangler.demangle(input())
+        if remove_ret_type:
+            ret.return_type = None
+
+        if remove_argv:
+            ret.args = []
+        print(ret)
+
+
+if __name__ == "__main__":
+    if sys.argv[1] == "nameonly":
+        run(
+            remove_ret_type=True,
+            remote_argv=True
+        )
+    elif sys.argv[1] == "i":
+        run()
