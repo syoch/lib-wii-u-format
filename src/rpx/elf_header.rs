@@ -1,20 +1,20 @@
 use super::{super::binary_reader::BinaryReader, elf_identifier::ELFIdentifier};
 
 pub struct ELFHeader {
-    e_ident: ELFIdentifier,
-    e_type: u32,
-    e_machine: u32,
-    e_version: u64,
-    e_entry: u64,
-    e_phoff: u64,
-    e_shoff: u64,
-    e_flags: u64,
-    e_ehsize: u32,
-    e_phentsize: u32,
-    e_phnum: u32,
-    e_shentsize: u32,
-    e_shnum: u32,
-    e_shstrndx: u32,
+    pub e_ident: ELFIdentifier,
+    pub e_type: u32,
+    pub e_machine: u32,
+    pub e_version: u64,
+    pub e_entry: u64,
+    pub program_header_offset: u64,
+    pub section_header_offset: u64,
+    pub e_flags: u64,
+    pub elf_header_size: u32,
+    pub program_header_size: u32,
+    pub program_headers_count: u32,
+    pub section_header_size: u32,
+    pub section_header_count: u32,
+    pub str_table_index: u32,
 }
 
 impl ELFHeader {
@@ -25,15 +25,15 @@ impl ELFHeader {
             e_machine: 0,
             e_version: 0,
             e_entry: 0,
-            e_phoff: 0,
-            e_shoff: 0,
+            program_header_offset: 0,
+            section_header_offset: 0,
             e_flags: 0,
-            e_ehsize: 0,
-            e_phentsize: 0,
-            e_phnum: 0,
-            e_shentsize: 0,
-            e_shnum: 0,
-            e_shstrndx: 0,
+            elf_header_size: 0,
+            program_header_size: 0,
+            program_headers_count: 0,
+            section_header_size: 0,
+            section_header_count: 0,
+            str_table_index: 0,
         }
     }
 
@@ -46,15 +46,15 @@ impl ELFHeader {
         ret.e_machine = reader.read_half();
         ret.e_version = reader.read_word();
         ret.e_entry = reader.read_word();
-        ret.e_phoff = reader.read_word();
-        ret.e_shoff = reader.read_word();
+        ret.program_header_offset = reader.read_word();
+        ret.section_header_offset = reader.read_word();
         ret.e_flags = reader.read_word();
-        ret.e_ehsize = reader.read_half();
-        ret.e_phentsize = reader.read_half();
-        ret.e_phnum = reader.read_half();
-        ret.e_shentsize = reader.read_half();
-        ret.e_shnum = reader.read_half();
-        ret.e_shstrndx = reader.read_half();
+        ret.elf_header_size = reader.read_half();
+        ret.program_header_size = reader.read_half();
+        ret.program_headers_count = reader.read_half();
+        ret.section_header_size = reader.read_half();
+        ret.section_header_count = reader.read_half();
+        ret.str_table_index = reader.read_half();
 
         return ret;
     }
@@ -82,14 +82,14 @@ mod tests {
         assert_eq!(elf_header.e_machine, 0x0014);
         assert_eq!(elf_header.e_version, 0x00000001);
         assert_eq!(elf_header.e_entry, 0x02000000);
-        assert_eq!(elf_header.e_phoff, 0x00000000);
-        assert_eq!(elf_header.e_shoff, 0x00000040);
+        assert_eq!(elf_header.program_header_offset, 0x00000000);
+        assert_eq!(elf_header.section_header_offset, 0x00000040);
         assert_eq!(elf_header.e_flags, 0x00000000);
-        assert_eq!(elf_header.e_ehsize, 0x0034);
-        assert_eq!(elf_header.e_phentsize, 0x0000);
-        assert_eq!(elf_header.e_phnum, 0x0000);
-        assert_eq!(elf_header.e_shentsize, 0x0028);
-        assert_eq!(elf_header.e_shnum, 0x0012);
-        assert_eq!(elf_header.e_shstrndx, 0x000f);
+        assert_eq!(elf_header.elf_header_size, 0x0034);
+        assert_eq!(elf_header.program_header_size, 0x0000);
+        assert_eq!(elf_header.program_headers_count, 0x0000);
+        assert_eq!(elf_header.section_header_size, 0x0028);
+        assert_eq!(elf_header.section_header_count, 0x0012);
+        assert_eq!(elf_header.str_table_index, 0x000f);
     }
 }

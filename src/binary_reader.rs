@@ -6,12 +6,24 @@ pub enum Endian {
     Little,
 }
 
+#[derive(PartialEq, Debug, Clone)]
 pub struct BinaryReader {
     pub data: Vec<u8>,
     pub offset: usize,
 
     pub endian: Endian,
     pub is_64bit: bool,
+}
+
+impl Default for BinaryReader {
+    fn default() -> Self {
+        Self {
+            data: Vec::new(),
+            offset: 0,
+            endian: Endian::Little,
+            is_64bit: false,
+        }
+    }
 }
 
 impl BinaryReader {
@@ -35,6 +47,10 @@ impl BinaryReader {
         } else {
             concat_number(low, high, shift)
         }
+    }
+
+    pub fn seek(&mut self, offset: usize) {
+        self.offset = offset;
     }
 }
 
@@ -107,7 +123,7 @@ impl BinaryReader {
 
     pub fn read_n_bytes(&mut self, size: usize) -> Vec<u8> {
         let mut result = Vec::new();
-        for i in 0..size {
+        for _ in 0..size {
             result.push(self.read_u8());
         }
         result

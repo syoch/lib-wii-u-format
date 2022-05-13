@@ -2,8 +2,8 @@
   "saveAndRun": {
     "commands": [
       {
-        // "cmd": "cargo run"
-        "cmd": "python3 arc.py"
+        "cmd": "cargo test"
+        // "cmd": "python3 arc.py"
       }
     ]
   }

@@ -11,6 +11,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
+def str_to_bytes_with_length(s: str) -> bytes:
+    return len(s).to_bytes(2, 'big') + s.encode()
+
+
+def list_str_to_bytes(lst: List[str]) -> bytes:
+    res = b''
+    res += len(lst).to_bytes(2, 'big')
+    for s in lst:
+        res += str_to_bytes_with_length(s)
+    return res
+
+
 class Type:
     def __init__(self):
         self.suffixes: List[str] = []
@@ -72,9 +84,13 @@ class Name:
         self.template: List[Type] = []
 
     def __str__(self):
-        ret = self.name
+        ret = self.to_str_tail()
         if len(self.namespace.path) > 0:
             ret = "::".join([str(self.namespace), str(ret)])
+        return ret
+
+    def to_str_tail(self):
+        ret = self.name
         if len(self.template) > 0:
             ret += "<" + ", ".join([str(x) for x in self.template])+">"
         return ret
@@ -661,24 +677,69 @@ def main():
             fp.write(line + "\n")
 
 
-def run(remove_ret_type=False, remove_argv=False):
+def run(
+    remove_ret_type=False,
+    remove_argv=False,
+    as_binary=False
+):
     demangler = Demangler()
     logger.setLevel(logging.INFO)
     while True:
-        ret = demangler.demangle(input())
+        x = input()
+        if x.startswith("____"):
+            x = x[2:]
+
+        try:
+            ret = demangler.demangle(x)
+        except:
+            ret = x
+
+        if type(ret) == str:
+            print(ret)
+            continue
+
         if remove_ret_type:
             ret.return_type = None
 
         if remove_argv:
             ret.args = []
-        print(ret)
+
+        if not as_binary:
+            print(ret)
+            continue
+
+        res = b''
+        res += ret.is_static.to_bytes(1, 'little')
+
+        res += list_str_to_bytes([
+            *[str(x) for x in ret.name.namespace.path],
+            ret.name.to_str_tail()
+        ])
+
+        res += list_str_to_bytes([str(x) for x in ret.args])
+
+        res += str_to_bytes_with_length(
+            str(ret.return_type)
+        )
+
+        sys.stdout.buffer.write(res)
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "nameonly":
-        run(
-            remove_ret_type=True,
-            remote_argv=True
-        )
-    elif sys.argv[1] == "i":
-        run()
+    remove_ret_type = False
+    remove_argv = False
+    as_binary = False
+
+    for modeflag in sys.argv[1]:
+        if modeflag == "r":
+            remove_ret_type = True
+        elif modeflag == "a":
+            remove_argv = True
+        elif modeflag == "b":
+            as_binary = True
+
+    run(
+        remove_ret_type=remove_ret_type,
+        remove_argv=remove_argv,
+        as_binary=as_binary
+    )
