@@ -114,11 +114,7 @@ impl BinaryReader {
 
 impl BinaryReader {
     pub fn read(&mut self, pos: usize, size: usize) -> Vec<u8> {
-        let mut result = Vec::new();
-        for i in 0..size {
-            result.push(self.data[pos + i]);
-        }
-        result
+        return self.data[pos..pos + size].to_vec();
     }
 
     pub fn read_n_bytes(&mut self, size: usize) -> Vec<u8> {
@@ -126,6 +122,16 @@ impl BinaryReader {
         for _ in 0..size {
             result.push(self.read_u8());
         }
+        result
+    }
+
+    pub fn find_zero(&mut self) -> usize {
+        let mut result = 0;
+        while self.data[self.offset] != 0 {
+            self.offset += 1;
+            result += 1;
+        }
+        self.offset += 1;
         result
     }
 }

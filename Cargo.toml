@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 num = "0.4.0"
-flate2 = "1.0.23"
+flate2 = { version = "1.0.17", features = ["zlib-ng-compat"], default-features = false }
 
 [lib]
 crate-type = ["cdylib"]

@@ -23,12 +23,8 @@ impl Default for Rpx {
 
 impl Rpx {
     pub fn parse(reader: BinaryReader) -> Rpx {
-        let mut ret = Rpx {
-            elf_header: ELFHeader::default(),
-            program_headers: Vec::new(),
-            section_headers: Vec::new(),
-            reader: reader,
-        };
+        let mut ret = Rpx::default();
+        ret.reader = reader;
 
         ret.init();
 
@@ -41,6 +37,7 @@ impl Rpx {
         self.reader
             .seek(self.elf_header.program_header_offset as usize);
         for _ in 0..self.elf_header.program_headers_count {
+            println!("Reading program header");
             self.program_headers
                 .push(ProgramHeader::parse(&mut self.reader));
         }
@@ -48,6 +45,7 @@ impl Rpx {
         self.reader
             .seek(self.elf_header.section_header_offset as usize);
         for _ in 0..self.elf_header.section_header_count {
+            println!("Reading section header");
             self.section_headers
                 .push(SectionHeader::parse(&mut self.reader));
         }
