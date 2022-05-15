@@ -1,0 +1,4 @@
+u32 unknown;
+u32 file_size;
+
+// ZLib compresed LEVEL file
