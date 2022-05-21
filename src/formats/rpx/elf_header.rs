@@ -57,7 +57,7 @@ impl ELFHeader {
         ret.section_header_size = reader.read_u16();
         ret.section_header_count = reader.read_u16();
         ret.str_table_index = reader.read_u16();
-        return ret;
+        ret
     }
 }
 

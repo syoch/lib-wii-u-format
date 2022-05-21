@@ -1,5 +1,5 @@
 pub fn find_zero(data: Vec<u8>, offset: usize) -> usize {
-    if data.len() == 0 {
+    if data.is_empty() {
         return offset;
     }
     let mut offset = offset;

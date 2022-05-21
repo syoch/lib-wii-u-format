@@ -219,8 +219,8 @@ struct File1 {
   u32 a;
   u32 entries;
   FileInfo fileinfos[entries];
-  u32 a;
 
+  u32 a;
   PNGEntry entry[entries];
 };
 

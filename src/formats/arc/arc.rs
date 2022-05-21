@@ -1,11 +1,11 @@
 use super::entry::Entry;
 use crate::binary_reader::{BinaryReader, Parsable};
 
-pub struct ARC {
+pub struct Arc {
     entries: Vec<Entry>,
 }
 
-impl Parsable for ARC {
+impl Parsable for Arc {
     fn parse(reader: &mut BinaryReader) -> Self {
         let entries_count = reader.read_u32();
         let mut entries = Vec::with_capacity(entries_count as usize);

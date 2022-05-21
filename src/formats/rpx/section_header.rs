@@ -84,7 +84,7 @@ impl SectionHeader {
             ret.data = buf;
         }
 
-        return ret;
+        ret
     }
 
     pub fn default() -> SectionHeader {

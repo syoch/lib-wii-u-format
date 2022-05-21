@@ -24,15 +24,19 @@ impl Default for Rpx {
 
 impl Rpx {
     pub fn parse(reader: BinaryReader) -> Rpx {
-        let mut ret = Rpx::default();
-        ret.reader = reader;
+        let mut ret = {
+            Self {
+                reader,
+                ..Default::default()
+            }
+        };
 
         ret.init();
 
         ret
     }
 
-    pub fn init(&mut self) -> () {
+    pub fn init(&mut self) {
         self.elf_header = ELFHeader::parse(&mut self.reader);
 
         self.reader
@@ -70,6 +74,4 @@ impl Rpx {
 }
 
 #[cfg(test)]
-mod tests {
-    
-}
+mod tests {}

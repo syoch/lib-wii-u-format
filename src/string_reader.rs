@@ -50,8 +50,8 @@ impl StringReader {
     }
 
     pub fn if_startswith(&mut self, needle: &[u8]) -> Result<bool, String> {
-        for i in 0..needle.len() {
-            if self.read_char_abs(self.offset + i)? != needle[i] {
+        for (i, ch) in needle.iter().enumerate() {
+            if self.read_char_abs(self.offset + i)? != *ch {
                 return Ok(false);
             }
         }

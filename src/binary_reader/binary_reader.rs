@@ -24,7 +24,7 @@ impl Default for BinaryReader {
 impl BinaryReader {
     pub fn new(data: Vec<u8>) -> BinaryReader {
         BinaryReader {
-            data: data,
+            data,
             offset: 0,
             endian: Endian::Big,
             is_64bit: false,
@@ -125,7 +125,7 @@ impl BinaryReader {
 
 impl BinaryReader {
     pub fn read(&mut self, pos: usize, size: usize) -> Vec<u8> {
-        return self.data[pos..pos + size].to_vec();
+        self.data[pos..pos + size].to_vec()
     }
 
     pub fn read_n_bytes(&mut self, size: usize) -> Vec<u8> {
