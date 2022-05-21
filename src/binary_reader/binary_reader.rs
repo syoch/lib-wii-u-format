@@ -1,18 +1,5 @@
-use super::utils::concat_number;
-
-#[derive(PartialEq, Debug, Clone)]
-pub enum Endian {
-    Big,
-    Little,
-}
-impl std::fmt::Display for Endian {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        match self {
-            Endian::Big => write!(f, "Big"),
-            Endian::Little => write!(f, "Little"),
-        }
-    }
-}
+use super::super::utils::concat_number;
+use super::Endian;
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct BinaryReader {

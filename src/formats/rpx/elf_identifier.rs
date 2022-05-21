@@ -1,6 +1,4 @@
-use crate::binary_reader;
-
-use super::super::binary_reader::{BinaryReader, Endian};
+use crate::binary_reader::{BinaryReader, Endian};
 
 #[derive(Debug)]
 pub struct ELFIdentifier {

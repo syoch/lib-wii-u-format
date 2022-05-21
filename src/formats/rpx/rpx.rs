@@ -1,8 +1,8 @@
-use super::super::binary_reader::BinaryReader;
-use super::super::utils::find_zero;
 use super::elf_header::ELFHeader;
 use super::program_header::ProgramHeader;
 use super::section_header::{SectionHeader, SectionName};
+use crate::binary_reader::BinaryReader;
+use crate::utils::find_zero;
 
 pub struct Rpx {
     pub elf_header: ELFHeader,

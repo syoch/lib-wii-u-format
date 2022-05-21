@@ -1,4 +1,4 @@
 mod binary_reader;
-mod rpx;
+mod formats;
 mod string_reader;
 mod utils;

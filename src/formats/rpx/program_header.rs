@@ -1,4 +1,4 @@
-use super::super::binary_reader::BinaryReader;
+use crate::binary_reader::BinaryReader;
 
 pub struct ProgramHeader {
     pub ph_type: u64,

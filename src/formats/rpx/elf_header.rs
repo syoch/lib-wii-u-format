@@ -1,4 +1,5 @@
-use super::{super::binary_reader::BinaryReader, elf_identifier::ELFIdentifier};
+use super::elf_identifier::ELFIdentifier;
+use crate::binary_reader::BinaryReader;
 
 #[derive(Debug)]
 pub struct ELFHeader {

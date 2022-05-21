@@ -1,4 +1,4 @@
-use super::super::binary_reader::BinaryReader;
+use crate::binary_reader::BinaryReader;
 use flate2::read::ZlibDecoder;
 use std::io::Read;
 
