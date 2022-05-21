@@ -71,5 +71,5 @@ impl Rpx {
 
 #[cfg(test)]
 mod tests {
-    use crate::binary_reader::BinaryReader;
+    
 }
