@@ -112,82 +112,82 @@ using String = common::String;
 
 
 namespace locale {
-struct LocaleMeta {
-  String locale_name;
-  u32 string_count [[color("ff88cc")]];
-};
+  struct LocaleMeta {
+    String locale_name;
+    u32 string_count [[color("ff88cc")]];
+  };
 
-struct LocaleDefinetion {
-  u32 locDef_1 [[color("cc8888")]];
-  u8 locDef_0 [[color("cc8888")]];
-  LocaleMeta locale_meta;
-  String strings[locale_meta.string_count];
-  
-};
+  struct LocaleDefinetion {
+    u32 locDef_1 [[color("cc8888")]];
+    u8 locDef_0 [[color("cc8888")]];
+    LocaleMeta locale_meta;
+    String strings[locale_meta.string_count];
 
-struct IDS {
-  u8 count [[color("ff88cc")]];
-  String string[count];
-};
+  };
 
-struct Locale {
-  u32 locale_0 [[color("cc8888")]];
-  u32 locale_1 [[color("cc8888")]];
-  u32 locales [[color("ff88cc")]];
-  u32 locale_2 [[color("cc8888")]];
-  IDS ids;
-  LocaleMeta metas[locales];
-  LocaleDefinetion definetions[locales];
-};
+  struct IDS {
+    u8 count [[color("ff88cc")]];
+    String string[count];
+  };
+
+  struct Locale {
+    u32 locale_0 [[color("cc8888")]];
+    u32 locale_1 [[color("cc8888")]];
+    u32 locales [[color("ff88cc")]];
+    u32 locale_2 [[color("cc8888")]];
+    IDS ids;
+    LocaleMeta metas[locales];
+    LocaleDefinetion definetions[locales];
+  };
 }
 using Locale = locale::Locale;
 
 
 
 namespace meta_database {
-struct MetaDatabaseEntry {
-  u32 index [[color("cc8888")]];
-  u16 pad0 [[color("cc8888")]];
-  WString name;
-  u32 e_1 [[color("cc8888")]];
-};
+  struct MetaDatabaseEntry {
+    u32 index [[color("cc8888")]];
+    u16 pad0 [[color("cc8888")]];
+    WString name;
+    u32 e_1 [[color("cc8888")]];
+  };
 
-struct MetaDatabase {
-  u32 metas [[color("ff88cc")]];
-  MetaDatabaseEntry meta_database[metas];
-};
+  struct MetaDatabase {
+    u32 metas [[color("ff88cc")]];
+    MetaDatabaseEntry meta_database[metas];
+  };
 }
 using MetaDatabase = meta_database::MetaDatabase;
 
 
 
 namespace entry {
-struct MetaEntry {
-    u32 meta_index; // ref. metadatabase
-    u16 meta_ent_0 [[color("cc8888")]];
-    WString value;
-    u32 meta_ent_1 [[color("cc8888")]];
-};
+  struct MetaEntry {
+      u32 meta_index; // ref. metadatabase
+      u16 meta_ent_0 [[color("cc8888")]];
+      WString value;
+      u32 meta_ent_1 [[color("cc8888")]];
+  };
 
-struct MetaDatas {
-  u32 metas [[color("ff88cc")]];
-  MetaEntry entries[metas];
-};
+  struct MetaDatas {
+    u32 metas [[color("ff88cc")]];
+    MetaEntry entries[metas];
+  };
 
-struct EmptyEntry {
-  MetaDatas meta;
-};
+  struct EmptyEntry {
+    MetaDatas meta;
+  };
 
-struct PNGEntry {
-  PNG data;
-  MetaDatas meta;
-};
+  struct PNGEntry {
+    PNG data;
+    MetaDatas meta;
+  };
 
 
-struct LocaleEntry {
-  Locale data;
-  MetaDatas meta;
-};
+  struct LocaleEntry {
+    Locale data;
+    MetaDatas meta;
+  };
 }
 using PNGEntry = entry::PNGEntry;
 using LocaleEntry = entry::LocaleEntry;
@@ -207,7 +207,7 @@ struct File0 {
   MetaDatabase meta_database;
   u32 entries;
   FileInfo fileinfos[entries];
-  
+
   EmptyEntry file_0;
   LocaleEntry locale;
   PNGEntry entries[entries - 2];
@@ -220,7 +220,7 @@ struct File1 {
   u32 entries;
   FileInfo fileinfos[entries];
   u32 a;
-  
+
   PNGEntry entry[entries];
 };
 
