@@ -113,6 +113,14 @@ impl BinaryReader {
             self.read_u32() as u64
         }
     }
+
+    pub fn read_size(&mut self) -> usize {
+        if self.is_64bit {
+            self.read_u64() as usize
+        } else {
+            self.read_u32() as usize
+        }
+    }
 }
 
 impl BinaryReader {

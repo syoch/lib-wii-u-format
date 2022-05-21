@@ -20,3 +20,31 @@ impl Parsable for U16String {
         ret
     }
 }
+impl Parsable for u8 {
+    fn parse(reader: &mut BinaryReader) -> Self {
+        reader.read_u8()
+    }
+}
+impl Parsable for u16 {
+    fn parse(reader: &mut BinaryReader) -> Self {
+        reader.read_u16()
+    }
+}
+
+impl Parsable for u32 {
+    fn parse(reader: &mut BinaryReader) -> Self {
+        reader.read_u32()
+    }
+}
+
+impl Parsable for u64 {
+    fn parse(reader: &mut BinaryReader) -> Self {
+        reader.read_u64()
+    }
+}
+
+impl Parsable for usize {
+    fn parse(reader: &mut BinaryReader) -> Self {
+        reader.read_size() as usize
+    }
+}
