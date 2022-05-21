@@ -5,6 +5,14 @@ pub enum Endian {
     Big,
     Little,
 }
+impl std::fmt::Display for Endian {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            Endian::Big => write!(f, "Big"),
+            Endian::Little => write!(f, "Little"),
+        }
+    }
+}
 
 #[derive(PartialEq, Debug, Clone)]
 pub struct BinaryReader {
@@ -110,6 +118,14 @@ impl BinaryReader {
             self.read_u64() as u128
         }
     }
+
+    pub fn read_addr(&mut self) -> u64 {
+        if self.is_64bit {
+            self.read_u64()
+        } else {
+            self.read_u32() as u64
+        }
+    }
 }
 
 impl BinaryReader {
@@ -122,16 +138,6 @@ impl BinaryReader {
         for _ in 0..size {
             result.push(self.read_u8());
         }
-        result
-    }
-
-    pub fn find_zero(&mut self) -> usize {
-        let mut result = 0;
-        while self.data[self.offset] != 0 {
-            self.offset += 1;
-            result += 1;
-        }
-        self.offset += 1;
         result
     }
 }
@@ -241,5 +247,29 @@ mod tests {
         let mut reader = super::BinaryReader::new(data);
         reader.is_64bit = false;
         assert_eq!(reader.read_dword(), 0x0102030405060708);
+    }
+
+    #[test]
+    fn test_read_n_bytes() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read_n_bytes(4), vec![0x01, 0x02, 0x03, 0x04]);
+    }
+
+    #[test]
+    fn test_read() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.read(4, 2), vec![0x05, 0x06]);
+    }
+
+    #[test]
+    fn test_read_all() {
+        let data = vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(
+            reader.read(0, 8),
+            vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
+        );
     }
 }

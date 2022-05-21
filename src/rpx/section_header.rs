@@ -20,7 +20,7 @@ impl std::fmt::Display for SectionName {
 #[derive(Debug)]
 pub struct SectionHeader {
     pub name: SectionName,
-    pub sh_type: u64,
+    pub sh_type: u32,
     pub sh_flags: u64,
     pub address: u64,
     pub offset: u64,
@@ -37,7 +37,7 @@ pub struct SectionHeader {
 impl SectionHeader {
     pub fn new(
         name: SectionName,
-        sh_type: u64,
+        sh_type: u32,
         sh_flags: u64,
         sh_addr: u64,
         sh_offset: u64,
@@ -65,15 +65,18 @@ impl SectionHeader {
             data: vec![],
         };
 
+        if sh_type == 0x08 {
+            // NO BITS
+            return ret;
+        }
+
         if let Some(reader) = reader {
-            println!("- Reading");
             ret.data = reader.read(ret.offset as usize, ret.size as usize);
         }
 
         if (ret.sh_flags & 1 << 27) != 0 {
             // 0x8000000
             ret.remained_flags &= !(1 << 27);
-            println!("- Deflating");
             // zlib deflate
             let mut decoder = ZlibDecoder::new(&ret.data[4..]);
             let mut buf = vec![];
@@ -91,15 +94,15 @@ impl SectionHeader {
     pub fn parse(reader: &mut BinaryReader) -> SectionHeader {
         SectionHeader::new(
             SectionName::Offset(reader.read_u32() as usize),
+            reader.read_u32(),
+            reader.read_word() as u64,
+            reader.read_addr(),
+            reader.read_addr(),
+            reader.read_word() as u64,
             reader.read_u32() as u64,
             reader.read_u32() as u64,
-            reader.read_u32() as u64,
-            reader.read_u32() as u64,
-            reader.read_u32() as u64,
-            reader.read_u32() as u64,
-            reader.read_u32() as u64,
-            reader.read_u32() as u64,
-            reader.read_u32() as u64,
+            reader.read_word() as u64,
+            reader.read_word() as u64,
             Some(reader),
         )
     }
@@ -109,17 +112,8 @@ impl std::fmt::Display for SectionHeader {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(
             f,
-            "SectionHeader {}[{:#010x}]{{flags: {:#010x}, link: {:#010x}, info: {:#010x}, ent_size: {:#010x} }} @ {:#010x}({:#010x}) -> {:#010x}[{:#010x}]",
-            self.name,
-            self.sh_type,
-            self.sh_flags,
-            self.sh_link,
-            self.sh_info,
-            self.sh_ent_size,
-            self.offset,
-            self.size,
-            self.address,
-            self.alignment,
+            "SectionHeader[{:#010x}] @ {:#010x}({:#010x}) -> {:#010x}[{:#010x}]: {}",
+            self.sh_type, self.offset, self.size, self.address, self.alignment, self.name
         )
     }
 }

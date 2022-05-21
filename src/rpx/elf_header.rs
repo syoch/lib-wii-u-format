@@ -1,20 +1,21 @@
 use super::{super::binary_reader::BinaryReader, elf_identifier::ELFIdentifier};
 
+#[derive(Debug)]
 pub struct ELFHeader {
     pub e_ident: ELFIdentifier,
-    pub e_type: u32,
-    pub e_machine: u32,
-    pub e_version: u64,
+    pub e_type: u16,
+    pub e_machine: u16,
+    pub e_version: u32,
     pub e_entry: u64,
     pub program_header_offset: u64,
     pub section_header_offset: u64,
-    pub e_flags: u64,
-    pub elf_header_size: u32,
-    pub program_header_size: u32,
-    pub program_headers_count: u32,
-    pub section_header_size: u32,
-    pub section_header_count: u32,
-    pub str_table_index: u32,
+    pub e_flags: u32,
+    pub elf_header_size: u16,
+    pub program_header_size: u16,
+    pub program_headers_count: u16,
+    pub section_header_size: u16,
+    pub section_header_count: u16,
+    pub str_table_index: u16,
 }
 
 impl ELFHeader {
@@ -42,20 +43,19 @@ impl ELFHeader {
 
         ret.e_ident = ELFIdentifier::parse(reader);
 
-        ret.e_type = reader.read_half();
-        ret.e_machine = reader.read_half();
-        ret.e_version = reader.read_word();
-        ret.e_entry = reader.read_word();
-        ret.program_header_offset = reader.read_word();
-        ret.section_header_offset = reader.read_word();
-        ret.e_flags = reader.read_word();
-        ret.elf_header_size = reader.read_half();
-        ret.program_header_size = reader.read_half();
-        ret.program_headers_count = reader.read_half();
-        ret.section_header_size = reader.read_half();
-        ret.section_header_count = reader.read_half();
-        ret.str_table_index = reader.read_half();
-
+        ret.e_type = reader.read_u16();
+        ret.e_machine = reader.read_u16();
+        ret.e_version = reader.read_u32();
+        ret.e_entry = reader.read_addr();
+        ret.program_header_offset = reader.read_addr();
+        ret.section_header_offset = reader.read_addr();
+        ret.e_flags = reader.read_u32();
+        ret.elf_header_size = reader.read_u16();
+        ret.program_header_size = reader.read_u16();
+        ret.program_headers_count = reader.read_u16();
+        ret.section_header_size = reader.read_u16();
+        ret.section_header_count = reader.read_u16();
+        ret.str_table_index = reader.read_u16();
         return ret;
     }
 }

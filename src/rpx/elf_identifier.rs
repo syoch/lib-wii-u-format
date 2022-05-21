@@ -1,5 +1,8 @@
+use crate::binary_reader;
+
 use super::super::binary_reader::{BinaryReader, Endian};
 
+#[derive(Debug)]
 pub struct ELFIdentifier {
     os_abi: u8,
     abi_version: u8,
@@ -64,6 +67,11 @@ impl ELFIdentifier {
             }
         }
 
+        println!(
+            "Use {}-{} mode",
+            (if reader.is_64bit { "64bit" } else { "32bit" }),
+            reader.endian
+        );
         ret
     }
 }

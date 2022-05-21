@@ -1,7 +1,8 @@
 use super::super::binary_reader::BinaryReader;
+use super::super::utils::find_zero;
 use super::elf_header::ELFHeader;
 use super::program_header::ProgramHeader;
-use super::section_header::SectionHeader;
+use super::section_header::{SectionHeader, SectionName};
 
 pub struct Rpx {
     pub elf_header: ELFHeader,
@@ -37,7 +38,6 @@ impl Rpx {
         self.reader
             .seek(self.elf_header.program_header_offset as usize);
         for _ in 0..self.elf_header.program_headers_count {
-            println!("Reading program header");
             self.program_headers
                 .push(ProgramHeader::parse(&mut self.reader));
         }
@@ -45,10 +45,27 @@ impl Rpx {
         self.reader
             .seek(self.elf_header.section_header_offset as usize);
         for _ in 0..self.elf_header.section_header_count {
-            println!("Reading section header");
             self.section_headers
                 .push(SectionHeader::parse(&mut self.reader));
         }
+
+        for i in 0..self.section_headers.len() {
+            if let SectionName::Offset(offset) = self.section_headers[i].name {
+                self.section_headers[i].name =
+                    SectionName::String(self.read_str_from_strtab(offset));
+            }
+        }
+    }
+}
+
+impl Rpx {
+    pub fn read_str_from_strtab(&mut self, offset: usize) -> String {
+        let data = &self.section_headers[self.elf_header.str_table_index as usize].data;
+        let end = find_zero(data.to_vec(), offset);
+        if offset == end {
+            return String::new();
+        }
+        String::from_utf8(data[offset..end].to_vec()).unwrap()
     }
 }
 
