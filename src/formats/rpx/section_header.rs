@@ -119,7 +119,8 @@ impl std::fmt::Display for SectionHeader {
 }
 #[cfg(test)]
 mod tests {
-    use crate::{binary_reader::BinaryReader, rpx::section_header::SectionName};
+    use super::SectionName;
+    use crate::binary_reader::BinaryReader;
 
     #[test]
     fn test_parse() {
