@@ -139,6 +139,12 @@ impl BinaryReader {
         }
         result
     }
+
+    pub fn read_u16_string(&mut self) -> String {
+        let length = self.read_u16() as usize;
+        let bytes = self.read_n_bytes(length);
+        String::from_utf8_lossy(&bytes).to_string()
+    }
 }
 
 #[cfg(test)]

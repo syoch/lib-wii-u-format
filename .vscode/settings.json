@@ -2,8 +2,8 @@
   "saveAndRun": {
     "commands": [
       {
-        "cmd": "cargo run"
-        //"cmd": "cargo test"
+        // "cmd": "cargo run"
+        "cmd": "cargo test"
       }
     ]
   }
