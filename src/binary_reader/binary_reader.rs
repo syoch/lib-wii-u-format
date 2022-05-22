@@ -50,6 +50,10 @@ impl BinaryReader {
 }
 
 impl BinaryReader {
+    pub fn peek_u8(&self) -> u8 {
+        self.data[self.offset]
+    }
+
     pub fn read_u8(&mut self) -> u8 {
         let result = self.data[self.offset];
         self.offset += 1;
@@ -266,5 +270,15 @@ mod tests {
             reader.read(0, 8),
             vec![0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]
         );
+    }
+
+    #[test]
+    fn test_peek_u8() {
+        let data = vec![0x01, 0x02];
+        let mut reader = super::BinaryReader::new(data);
+        assert_eq!(reader.peek_u8(), 0x01);
+        assert_eq!(reader.read_u8(), 0x01);
+        assert_eq!(reader.peek_u8(), 0x02);
+        assert_eq!(reader.read_u8(), 0x02);
     }
 }
